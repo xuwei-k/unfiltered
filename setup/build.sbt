@@ -2,10 +2,9 @@ organization := "net.databinder"
 
 version := "0.6.4"
 
-crossScalaVersions := Seq("2.8.1", "2.8.2",
-                   "2.9.0-1", "2.9.1", "2.9.1-1", "2.9.2")
+crossScalaVersions := Seq("2.9.0-1", "2.9.1", "2.9.1-1", "2.9.2", "2.10.0")
 
-scalaVersion := "2.8.2"
+scalaVersion := "2.10.0"
 
 scalacOptions ++=
   Seq("-Xcheckinit", "-encoding", "utf8", "-deprecation", "-unchecked")

@@ -9,19 +9,19 @@ object Shared {
 
   def specsDep(sv: String) =
     sv.split("[.-]").toList match {
-      case "2" :: "8" :: _ => "org.scala-tools.testing" % "specs_2.8.1" % "1.6.8"
       case "2" :: "9" :: "0" :: "1" :: _ => "org.scala-tools.testing" %% "specs" % "1.6.8"
       case "2" :: "9" :: _ => "org.scala-tools.testing" % "specs_2.9.1" % "1.6.9"
+      case "2" :: "10" :: _ => "org.scala-tools.testing" % "specs_2.10" % "1.6.9"
       case _ => sys.error("specs not supported for scala version %s" format sv)
     }
 
-  val dispatchVersion = "0.8.8"
+  val dispatchVersion = "0.8.9"
   def dispatchDeps =
-    "net.databinder" %% "dispatch-mime" % dispatchVersion ::
-    "net.databinder" %% "dispatch-http" % dispatchVersion :: Nil
+    "net.databinder" % "dispatch-mime_2.10" % dispatchVersion ::
+    "net.databinder" % "dispatch-http_2.10" % dispatchVersion :: Nil
 
   def dispatchOAuthDep =
-    "net.databinder" %% "dispatch-oauth" % dispatchVersion
+    "net.databinder" % "dispatch-oauth_2.10" % dispatchVersion
 
   def integrationTestDeps(sv: String) = (specsDep(sv) :: dispatchDeps) map { _ % "test" }
 }
