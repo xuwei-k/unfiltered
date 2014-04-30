@@ -49,6 +49,17 @@ object Unfiltered extends Build {
             specs2Helpers, scalaTestHelpers, websockets, oauth,  mac,
             oauth2, agents, directives)
 
+  lazy val unfiltered211 =
+    Project("unfiltered-scala211",
+            file("scala211"),
+            settings = Defaults.defaultSettings ++ Common.settings
+    ).aggregate(
+            library, filters, filtersAsync , uploads, filterUploads,
+            nettyUploads, util, jetty,
+            jettyAjpProject, netty, nettyServer, json4s,
+            specs2Helpers, scalaTestHelpers, websockets, oauth,  mac,
+            oauth2, agents, directives)
+
   lazy val library: Project =
     module("unfiltered")(
       dirName = "library",
