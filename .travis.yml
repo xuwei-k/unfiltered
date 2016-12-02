@@ -3,12 +3,6 @@ sudo: false
 scala:
   - 2.10.6
   - 2.11.8
-  - 2.12.0
 jdk:
-  - oraclejdk7
-  - oraclejdk8
+  - openjdk6
 script: sbt ++${TRAVIS_SCALA_VERSION} test publishLocal
-matrix:
-  exclude:
-  - scala: 2.12.0
-    jdk: oraclejdk7
