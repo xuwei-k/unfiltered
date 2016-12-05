@@ -24,6 +24,13 @@ def dependsOnInTest(id: String) =
 
 val dependsOnSpecs2InTest = dependsOnInTest(specs2ProjectId)
 
+lazy val docs = (project in file("docs")).
+  enablePlugins(ParadoxPlugin).settings(
+    Common.settings,
+    name := "Unfiltered documents",
+    paradoxTheme := Some(builtinParadoxTheme("generic"))
+  )
+
 lazy val library: Project = module("unfiltered")(
   dirName = "library",
   projectId = "unfiltered"
