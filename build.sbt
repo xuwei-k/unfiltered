@@ -24,6 +24,27 @@ def dependsOnInTest(id: String) =
 
 val dependsOnSpecs2InTest = dependsOnInTest(specs2ProjectId)
 
+lazy val docs = (project in file("docs")).
+  enablePlugins(ParadoxPlugin).
+  enablePlugins(ParadoxSitePlugin).settings(
+    Common.settings,
+    ghpages.settings,
+    git.remoteRepo := "git@github.com:xuwei-k/unfiltered-page-test.git",
+    paradoxProperties in Paradox ++= Map(
+      "version" -> version.value,
+      "extref.unidoc.base_url" -> {
+        // can't use @scaladoc due to https://github.com/lightbend/paradox/pull/77
+        val latestVersion = "0.9.0-beta2"
+        val sonatype = "https://oss.sonatype.org/service/local/repositories/releases/archive"
+        val artifactId = (name in LocalRootProject).value + "_2.12"
+        s"${sonatype}/${organization.value.replace('.', '/')}/${artifactId}/${latestVersion}/${artifactId}-${latestVersion}-javadoc.jar/!/%s"
+      },
+      "github" -> "unfiltered/unfiltered"
+    ),
+    name := "Unfiltered documents",
+    paradoxTheme := Some(builtinParadoxTheme("generic"))
+  )
+
 lazy val library: Project = module("unfiltered")(
   dirName = "library",
   projectId = "unfiltered"

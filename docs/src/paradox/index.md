@@ -6,8 +6,24 @@ Unfiltered
  server backends, without impeding direct access to their native
  interfaces.
 
-> [Version $version$ Release Notes]($notes$)
-
 This documentation walks through basic functionality of the
 library. You may also want to refer to Unfiltered's
-[scaladocs](https://oss.sonatype.org/service/local/repositories/releases/archive/ws/unfiltered/unfiltered-all_$scalaBinary$/$version$/unfiltered-all_$scalaBinary$-$version$-javadoc.jar/!/unfiltered/index.html)
+
+@extref[scaladocs](unidoc:index.html)
+
+@@@ index
+
+* [ ](01.md)
+* [ ](02.md)
+* [ ](03.md)
+* [ ](04.md)
+* [ ](05.md)
+* [ ](06/00.md)
+* [ ](07/00.md)
+* [ ](08/00.md)
+* [ ](09/00.md)
+* [ ](10/00.md)
+* [ ](11.md)
+* [ ](99.md)
+
+@@@
