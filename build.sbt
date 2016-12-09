@@ -42,6 +42,8 @@ lazy val docs = (project in file("docs")).
     ),
     name := "Unfiltered documents",
     paradoxTheme := Some(builtinParadoxTheme("generic"))
+  ).dependsOn(
+    nettyUploads, filterUploads, specs2, scalatest, oauth2, oauth, filtersAsync, agents, json4s
   )
 
 lazy val library: Project = module("unfiltered")(
