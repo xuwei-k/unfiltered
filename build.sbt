@@ -38,8 +38,7 @@ lazy val docs = (project in file("docs")).
         val sonatype = "https://oss.sonatype.org/service/local/repositories/releases/archive"
         val artifactId = (name in LocalRootProject).value + "_2.12"
         s"${sonatype}/${organization.value.replace('.', '/')}/${artifactId}/${latestVersion}/${artifactId}-${latestVersion}-javadoc.jar/!/%s"
-      },
-      "github" -> "unfiltered/unfiltered"
+      }
     ),
     name := "Unfiltered documents",
     paradoxTheme := Some(builtinParadoxTheme("generic"))
