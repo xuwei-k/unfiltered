@@ -13,6 +13,7 @@ packagedArtifacts := Classpaths.packaged(Seq(packageDoc in Compile)).value
 Defaults.packageTaskSettings(
   packageDoc in Compile, (UnidocKeys.unidoc in Compile).map{_.flatMap(Path.allSubpaths)}
 )
+UnidocKeys.unidocProjectFilter in (ScalaUnidoc, UnidocKeys.unidoc) := inAnyProject -- inProjects(docs)
 
 val specs2ProjectId = "specs2"
 val scalatestProjectId = "scalatest"
@@ -40,6 +41,11 @@ lazy val docs = (project in file("docs")).
         s"${sonatype}/${organization.value.replace('.', '/')}/${artifactId}/${latestVersion}/${artifactId}-${latestVersion}-javadoc.jar/!/%s"
       }
     ),
+    publishArtifact := false,
+    publish := {},
+    publishLocal := {},
+    PgpKeys.publishSigned := {},
+    PgpKeys.publishLocalSigned := {},
     name := "Unfiltered documents",
     paradoxTheme := Some(builtinParadoxTheme("generic"))
   ).dependsOn(
