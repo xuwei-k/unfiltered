@@ -13,20 +13,7 @@ different values. Unfiltered's base model for parameters is therefore
 a string key to a sequence of string values in the order they were
 supplied. This is easy to obtain in a directive.
 
-```scala
-import unfiltered.request._
-import unfiltered.response._
-import unfiltered.directives._, Directives._
-
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        in <- parameterValues("in")
-      } yield ResponseString(in.toString)
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/b.scala) { #example1 }
 
 You can try this service with multiple, one, or no parameters.
 
@@ -49,16 +36,7 @@ particular format. From here on out, we'll be working with
 package. Interpreters define abstract operations on data; we can
 produce directives for a particular request parameter with `named`.
 
-```scala
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        in <- data.as.Int named "in"
-      } yield ResponseString(in.toString)
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/b.scala) { #example2 }
 
 By testing this service you'll find that all requests to the root path
 are accepted, and that the `in` value is bound to an `Option[Int]`. If
@@ -76,20 +54,7 @@ We can transform an interpreter that ignores failed interpretation
 into one that produces a failure response by passing an error handler
 to its `fail` method.
 
-```scala
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        in <- data.as.Int.fail { (k,v) =>
-          BadRequest ~> ResponseString(
-            s"'\$v' is not a valid int for \$k"
-          )
-        } named "in"
-      } yield ResponseString(in.toString)
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/b.scala) { #example3 }
 
 The error handling function receives both the parameter name and given
 value as parameters. This way, a directive used for more than one
