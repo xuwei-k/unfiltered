@@ -12,7 +12,7 @@ import unfiltered.request._
 import unfiltered.response._
 import unfiltered.netty._
 
-object Location extends 
+object Location extends
 Params.Extract("location", Params.first ~> Params.nonempty)
 
 object Temperature extends async.Plan with ServerErrorResponse {
@@ -25,7 +25,7 @@ object Temperature extends async.Plan with ServerErrorResponse {
         "weather" -> loc) <> { reply =>
           val tempC = for {
             elem <- reply \\\\ "temp_c"
-            attr <- elem.attribute("data") 
+            attr <- elem.attribute("data")
           } yield attr.toString
           req.respond(view(loc, tempC.headOption))
         }

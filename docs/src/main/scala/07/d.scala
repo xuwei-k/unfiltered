@@ -11,7 +11,7 @@ import unfiltered.request._
 import unfiltered.response._
 import unfiltered.directives._, Directives._
 
-implicit def required[T] = data.Requiring[T].fail(name => 
+implicit def required[T] = data.Requiring[T].fail(name =>
   BadRequest ~> ResponseString(name + " is missing\n")
 )
 // #example1
@@ -51,7 +51,7 @@ unfiltered.jetty.Server.portBinding(binding).plan(
   unfiltered.filter.Planify { Directive.Intent {
     case Path("/") =>
       for {
-        in <- data.as.BigInt.fail((k,v) => 
+        in <- data.as.BigInt.fail((k,v) =>
           BadRequest ~> ResponseString(s"'$v' is not a valid int for $k\n")
         ) ~> required named "in"
       } yield ResponseString(

@@ -24,7 +24,7 @@ unfiltered.jetty.Server.anylocal.plan(Echo).run()
 
 
 val myRenderer: String => Nothing = ???
- 
+
 // #example4
 object Public extends unfiltered.filter.Plan {
   def intent = {

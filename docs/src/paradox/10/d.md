@@ -52,7 +52,7 @@ val temp = async.Planify {
   case req =>
     h(weather("San+Francisco") <> { reply =>
       val tempC = (reply \\\\ "temp_c").headOption.flatMap {
-        _.attribute("data") 
+        _.attribute("data")
       }.getOrElse("unknown")
       req.respond(PlainTextContent ~>
                   ResponseString(tempC + "°C"))
