@@ -4,7 +4,7 @@ scala:
   - 2.12.1
 jdk:
   - oraclejdk8
-script: sbt docs/paradox:paradox # docs/ghpagesPushSite
+script: sbt docs/compile docs/paradox:paradox # docs/ghpagesPushSite
 matrix:
   exclude:
   - scala: 2.12.1
