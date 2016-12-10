@@ -40,7 +40,7 @@ unfiltered.jetty.Server.portBinding(binding).plan(
       for {
         in <- data.as.Int.fail { (k,v) =>
           BadRequest ~> ResponseString(
-            s"'\$v' is not a valid int for \$k"
+            s"'$v' is not a valid int for $k"
           )
         } named "in"
       } yield ResponseString(in.toString)

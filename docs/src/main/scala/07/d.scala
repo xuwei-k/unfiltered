@@ -25,7 +25,7 @@ unfiltered.jetty.Server.portBinding(binding).plan(
         opt <- data.as.Option[String] named "opt"
         req <- data.as.Required[String] named "req"
       } yield ResponseString(
-        s"opt: \$opt req: \$req"
+        s"opt: $opt req: $req"
       )
   } }
 ).run()
@@ -52,7 +52,7 @@ unfiltered.jetty.Server.portBinding(binding).plan(
     case Path("/") =>
       for {
         in <- data.as.BigInt.fail((k,v) => 
-          BadRequest ~> ResponseString(s"'\$v' is not a valid int for \$k\n")
+          BadRequest ~> ResponseString(s"'$v' is not a valid int for $k\n")
         ) ~> required named "in"
       } yield ResponseString(
         in % 10 + "\n"

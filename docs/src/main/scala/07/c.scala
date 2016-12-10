@@ -14,7 +14,7 @@ import unfiltered.directives._, Directives._
 
 val intValue = data.as.Int.fail { (k,v) =>
   BadRequest ~> ResponseString(
-    s"'\$v' is not a valid int for \$k"
+    s"'$v' is not a valid int for $k"
   )
 }
 
@@ -25,7 +25,7 @@ unfiltered.jetty.Server.portBinding(binding).plan(
         a <- intValue named "a"
         b <- intValue named "b"
       } yield ResponseString(
-        (a ++ b).sum + "\n"
+        (a ++ b).sum + "n"
       )
   } }
 ).run()
@@ -43,7 +43,7 @@ import unfiltered.directives._, Directives._
 implicit val implyIntValue =
   data.as.String ~> data.as.Int.fail { (k,v) =>
     BadRequest ~> ResponseString(
-      s"'\$v' is not a valid int for \$k"
+      s"'$v' is not a valid int for $k"
     )
   }
 
