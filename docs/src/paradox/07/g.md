@@ -50,16 +50,7 @@ this separately from our parameter directives, using the trusty old
   of this documentation. Feel free to play around with the template
   project source though, that's what it's there for.
 
-```scala
-    case POST(Params(params)) =>
-      case class BadParam(msg: String)
-      extends ResponseJoiner(msg)( messages =>
-          view(params)(<ul>{
-            for (message <- messages)
-            yield <li>{message}</li>
-          }</ul>)
-      )
-```
+@@snip [ ](../../main/scala/07/g.scala) { #example1 }
 
 Also worth noting is that we defined our `BadParam` case class inside
 the match expression, since it needs a reference to `params` to build
@@ -73,34 +64,17 @@ parameter -- an empty string. Since this will be a common user error,
 we should handle it much like we would if the parameter were not
 submitted at all.
 
-```scala
-val inputString = data.as.String ~>
-  data.as.String.trimmed ~>
-  data.as.String.nonEmpty.fail(
-    (key, _) => BadParam(s"\$key is empty")
-  )
-```
+@@snip [ ](../../main/scala/07/g.scala) { #example2 }
 
 But of course, we still need to define a `required` function since it
 is possible that some client will fail to submit a parameter.
 
-```scala
-implicit def required[T] = data.Requiring[T].fail(name =>
-  BadParam(name + " is missing")
-)
-```
+@@snip [ ](../../main/scala/07/g.scala) { #example3 }
 
 Finally, in this case the code keeps the logic of the conditional
 interpreter separate from the implementation, which is inline.
 
-```scala
-(inputString ~> data.Conditional(palindrome).fail(
-  (_, value) => BadParam(s"'\$value' is not a palindrome")
-) ~> required named "palindrome")
-...
-def palindrome(s: String) =
-  s.toLowerCase.reverse == s.toLowerCase
-```
+@@snip [ ](../../main/scala/07/g.scala) { #example4 }
 
 This is just to show the variety of what's possible, it's up to you to
 decide how to organize and apply your own interpreters. Good luck, and
