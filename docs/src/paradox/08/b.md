@@ -24,14 +24,7 @@ function chain provided by the intent.
 This part is already done for you in `unfiltered-libary`, but in case
 you are curious this is how the GZip kit is defined.
 
-```scala
-object GZip extends unfiltered.kit.Prepend {
-  def intent = Cycle.Intent[Any,Any] {
-    case Decodes.GZip(req) =>
-      ContentEncoding.GZip ~> ResponseFilter.GZip
-  }
-}
-```
+@@snip [ ](../../main/scala/08/b.scala) { #example1 }
 
 Unlike a plan's intent function, this one defines the conditions for
 which its response function is prepended another intent's. It sets
@@ -42,13 +35,7 @@ a header and a `FilterOutputStream` for the response.
 This is a very simple plan that will compress its responses if the
 user-agent supports it:
 
-```scala
-object EchoPlan extends unfiltered.filter.Plan {
-  def intent = unfiltered.kit.GZip {
-    case Path(path) => ResponseString(path)
-  }
-}
-```
+@@snip [ ](../../main/scala/08/b.scala) { #example2 }
 
 ### Do Kit Yourself
 
