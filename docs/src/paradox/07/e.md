@@ -19,24 +19,11 @@ to generate error responses in a consistent way. This allows you to
 factor out the status code generation and to put error messages in
 context. One way to do this is with a case class.
 
-```scala
-import unfiltered.request._
-import unfiltered.response._
-import unfiltered.directives._, Directives._
-
-case class OneBadParam(msg: String) extends Responder[Any] {
-  def respond(res: HttpResponse[Any]): Unit = 
-    (BadRequest ~> ResponseString(msg + "\n"))(res)
-}
-```
+@@snip [ ](../../main/scala/07/e.scala) { #example1 }
 
 We could use this class with a "required" function.
 
-```scala
-implicit def required[T] = data.Requiring[T].fail(name => 
-  OneBadParam(name + " is missing")
-)
-```
+@@snip [ ](../../main/scala/07/e.scala) { #example2 }
 
 This cuts out a bit of boiler plate, but things get more interesting
 when we define a smarter case class.
@@ -47,12 +34,7 @@ If we want Unfiltered to combine error responses from multiple
 directives, we need to specify exactly how that should work. This can
 be done with a simple variation of the case class defined above.
 
-```scala
-case class BadParam(msg: String) extends ResponseJoiner(msg)(
-  msgs =>
-    BadRequest ~> ResponseString(msgs.mkString("","\n","\n"))
-)
-```
+@@snip [ ](../../main/scala/07/e.scala) { #example3 }
 
 Instances of this class are still defined for a single error message
 `msg`, but they know how to format a response for multiple messages of
@@ -69,11 +51,7 @@ defined on any one of the instances.
 
 We can redefine "required" with this improved error responder.
 
-```scala
-implicit def required[T] = data.Requiring[T].fail(name => 
-  BadParam(name + " is missing")
-)
-```
+@@snip [ ](../../main/scala/07/e.scala) { #example4 }
 
 ### Joining and Splitting Directives
 
@@ -81,21 +59,7 @@ Now that we have joinable error responses issued from our required
 interpreter, we can use the `&` method of `Directive` to join them, as
 well as an unapply method of `unfiltered.request.&` to split them.
 
-```scala
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        (a & b & c) <-
-          (data.as.Required[String] named "a") &
-          (data.as.Required[String] named "b") &
-          (data.as.Required[String] named "c")
-      } yield ResponseString(
-        s"a: \$a b: \$b c: \$c"
-      )
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/e.scala) { #example5 }
 
 In a failure case, the errors objects are combined and returned on
 separate lines. On success, the combined directive produces nested
