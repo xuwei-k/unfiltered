@@ -18,45 +18,18 @@ constrain input parameters, Unfiltered leaves it to you to define
 interpreters using the Scala language. Here, we'll define a simple one
 that accepts only even integers.
 
-```scala
-import unfiltered.request._
-import unfiltered.response._
-import unfiltered.directives._, Directives._
-
-def badParam(msg: String) =
-  BadRequest ~> ResponseString(msg)
-
-val evenInt = data.Conditional[Int](_ % 2 == 0).fail(
-  (k, v) => badParam("not even: " + v)
-)
-```
+@@snip [ ](../../main/scala/07/f.scala) { #example1 }
 
 As a conditional interpreter of integer, `evenInt` inputs and outputs
 an integer, failing with an error if it doesn't satisfy the
 condition. To make it work seamlessly with request parameters we may
 define an implicit integer interpreter.
 
-```scala
-implicit val intValue =
-  data.as.String ~> data.as.Int.fail(
-    (k, v) => badParam("not an int: " + v)
-  )
-```
+@@snip [ ](../../main/scala/07/f.scala) { #example2 }
 
 Then it's just a matter of using `evenInt` like any other interpreter.
 
-```scala
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        even <- evenInt named "even"
-      } yield ResponseString(
-        even + "\n"
-      )
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/f.scala) { #example3 }
 
 ### Fallible Interpreters
 
@@ -68,39 +41,14 @@ interpreters, under the assumption that any conversion may fail.
 You can make a fallible interpreter to any type. We'll demonstrate
 with a simple typed data store.
 
-```scala
-case class Tool(name: String)
-val toolStore = Map(
-  1 -> Tool("Rock"),
-  2 -> Tool("Paper"),
-  3 -> Tool("Scissors")
-)
-
-val asTool = data.Fallible[Int,Tool](toolStore.get)
-
-implicit def implyTool =
-  data.as.String ~> data.as.Int ~> asTool.fail(
-    (k, v) => badParam(s"'\$v' is not a valid tool identifier")
-  )
-```
+@@snip [ ](../../main/scala/07/f.scala) { #example4 }
 
 The `data.Fallible` case class takes a function from its input type to
 an option of its output type; `Map#get` fits the bill perfectly. Then
 we defined a complete, error-capable interpreter so that it's easy and
 clean to turn input parameters into tools.
 
-```scala
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        tool <- data.as.Option[Tool] named "id"
-      } yield ResponseString(
-        tool + "\n"
-      )
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/f.scala) { #example5 }
 
 Let's see how it works:
 
