@@ -18,14 +18,7 @@ repositories are a little wonky, so cross your fingers.
 
 Once you do get to a console, this should just work:
 
-```scala
-import unfiltered.request._
-import unfiltered.response._
-val hello = unfiltered.netty.cycle.Planify {
-   case _ => ResponseString("hello world")
-}
-unfiltered.netty.Server.http(8080).plan(hello).run()
-```
+@@snip [ ](../../main/scala/10/a.scala) { #example1 }
 
 Direct a web browser to [http://127.0.0.1:8080/][local] and you'll
 be in *hello world* business.
