@@ -8,40 +8,11 @@ information about a user's session? That's where
 
 Let's build on our authenticated application and add support for simple cookie handling.
 
-```scala
-import unfiltered.Cookie
-
-case class App(users: Users) extends
-unfiltered.filter.Plan {
-  def intent = Auth(users) {
-    case Path("/") & Cookies(cookies) =>
-      ResponseString(cookies("pref") match {
-        case Some(Cookie(_, pref, _, _, _, _)) =>
-          "you pref %s, don't you?" format pref
-        case _ => "no preference?"
-      })
-    case Path("/prefer") & Params(p) =>
-       // let's store it on the client
-       SetCookies(Cookie("pref", p("pref")(0))) ~>
-         Redirect("/")
-    case Path("/forget") =>
-       SetCookies(Cookie("pref", "")) ~>
-         Redirect("/")
-  }
-}
-```
+@@snip [ ](../../main/scala/09/b.scala) { #example1 }
 
 Now that we have a slightly more sophisitcated basic application let's mount it with a user named `jim` and a password of `j@m`.
 
-```scala
-object JimsAuth extends Users {
-  def auth(u: String, p: String) =
-    u == "jim" && p == "j@m"
-}
-unfiltered.jetty.Server(8080).plan(
-  App(JimsAuth)
-).run
-```
+@@snip [ ](../../main/scala/09/b.scala) { #example2 }
 
 In your browser, open the url `http://localhost:8080/` and you should
 be greeted with its native authentication dialog. Enter `jim` and
