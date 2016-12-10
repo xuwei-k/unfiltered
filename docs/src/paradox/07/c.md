@@ -8,29 +8,7 @@ parameter of one method that expects an integer. Instead of defining
 interpreters inline, as in previous examples, you can define a general
 interpreter once and use it many places.
 
-```scala
-import unfiltered.request._
-import unfiltered.response._
-import unfiltered.directives._, Directives._
-
-val intValue = data.as.Int.fail { (k,v) =>
-  BadRequest ~> ResponseString(
-    s"'\$v' is not a valid int for \$k"
-  )
-}
-
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        a <- intValue named "a"
-        b <- intValue named "b"
-      } yield ResponseString(
-        (a ++ b).sum + "\n"
-      )
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/c.scala) { #example1 }
 
 In the example above we explicitly reference and apply a single
 interpreter to parameters "a" and "b", responding with their sum.
@@ -48,26 +26,7 @@ using interpreters often and in different applications, naming and
 recalling names for various types could become tedious. Let's try it
 with an implicit.
 
-```scala
-implicit val implyIntValue =
-  data.as.String ~> data.as.Int.fail { (k,v) =>
-    BadRequest ~> ResponseString(
-      s"'\$v' is not a valid int for \$k"
-    )
-  }
-
-unfiltered.jetty.Server(8080).plan(
-  unfiltered.filter.Planify { Directive.Intent {
-    case Path("/") =>
-      for {
-        a <- data.as.Option[Int] named "a"
-        b <- data.as.Option[Int] named "b"
-      } yield ResponseString(
-        (a ++ b).sum + "\n"
-      )
-  } }
-).run()
-```
+@@snip [ ](../../main/scala/07/c.scala) { #example2 }
 
 The first thing you may notice is that `implyIntValue` is a bit
 wordier than its predecessor. An implicit interpreter used for request
