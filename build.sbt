@@ -62,7 +62,8 @@ lazy val library: Project = module("unfiltered")(
       case _ =>
         Nil
     }
-  }
+  },
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(util)
 
 lazy val directives = module("directives")().settings(
@@ -72,19 +73,22 @@ lazy val directives = module("directives")().settings(
 lazy val filters = module(filterProjectId)().settings(
   description := "Server binding for Java Servlet filters",
   libraryDependencies += servletApiDep,
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
   dependsOnSpecs2InTest
 ).dependsOn(library)
 
 lazy val filtersAsync = module("filter-async")().settings(
   description := "Server binding for Java Servlet 3.0 async filters",
-  libraryDependencies += servletApiDep
+  libraryDependencies += servletApiDep,
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(filters, specs2 % "test")
 
 lazy val agents = module("agents")(
   srcPath = "unfiltered/request"
 ).settings(
   description := "User-Agent request matchers",
-  libraryDependencies ++= Seq(servletApiDep) ++ integrationTestDeps.value
+  libraryDependencies ++= Seq(servletApiDep) ++ integrationTestDeps.value,
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(
   library,
   scalatest % "test",
@@ -97,7 +101,8 @@ lazy val uploads = module("uploads")(
   description := "Generic support for multi-part uploads",
   libraryDependencies ++= Seq(
     "commons-io" % "commons-io" % commonsIoVersion
-  ) ++ integrationTestDeps.value
+  ) ++ integrationTestDeps.value,
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(library, specs2 % "test")
 
 lazy val filterUploads = module("filter-uploads")(
@@ -107,18 +112,21 @@ lazy val filterUploads = module("filter-uploads")(
   libraryDependencies ++= Seq(
     servletApiDep,
     "commons-fileupload" % "commons-fileupload" % commonsFileUploadVersion
-  ) ++ integrationTestDeps.value
+  ) ++ integrationTestDeps.value,
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(uploads, filters, specs2 % "test")
 
 lazy val util = module("util")().settings(
-  libraryDependencies += specs2Dep.value % "test"
+  libraryDependencies += specs2Dep.value % "test",
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 )
 
 lazy val jetty = module("jetty")().settings(
   description := "Jetty server embedding module",
   libraryDependencies := Seq(
     "org.eclipse.jetty" % "jetty-webapp" % jettyVersion
-  )
+  ),
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(util)
 
 lazy val nettyServer = module("netty-server")(
@@ -127,7 +135,8 @@ lazy val nettyServer = module("netty-server")(
   description := "Netty server embedding module",
   dependsOnSpecs2InTest,
   libraryDependencies += "javax.activation" % "activation" % javaxActivationVersion,
-  libraryDependencies ++= integrationTestDeps.value
+  libraryDependencies ++= integrationTestDeps.value,
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(netty, util)
 
 lazy val netty = module("netty")().settings(
@@ -139,14 +148,16 @@ lazy val netty = module("netty")().settings(
     ("io.netty" % "netty-transport-native-epoll" % nettyVersion classifier "linux-x86_64") +:
     ("io.netty" % "netty-transport-native-kqueue" % nettyVersion classifier "osx-x86_64") +:
     integrationTestDeps.value
-  }
+  },
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(library)
 
 lazy val specs2: Project = module(specs2ProjectId)().settings(
   description := "Facilitates testing Unfiltered servers with Specs2",
   libraryDependencies ++= {
     specs2Dep.value :: okHttp
-  }
+  },
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(filters, jetty, nettyServer)
 
 lazy val scalatest = module(scalatestProjectId)().settings(
@@ -154,7 +165,8 @@ lazy val scalatest = module(scalatestProjectId)().settings(
   libraryDependencies ++= {
     okHttp :+
     ("org.scalatest" %% "scalatest" % scalatestVersion)
-  }
+  },
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(filters, jetty, nettyServer)
 
 lazy val json4s = module("json4s")(
@@ -163,17 +175,20 @@ lazy val json4s = module("json4s")(
   description := "Json4s request matchers and response functions",
   libraryDependencies ++= {
     Seq("org.json4s" %% "json4s-native" % json4sVersion) ++ integrationTestDeps.value
-  }
+  },
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(library, filters % "test", specs2 % "test")
 
 lazy val websockets = module("netty-websockets")().settings(
   description := "WebSockets plan support using Netty",
   libraryDependencies ++= integrationTestDeps.value,
-  libraryDependencies += "com.ning" % "async-http-client" % asyncHttpClientVersion % "test"
+  libraryDependencies += "com.ning" % "async-http-client" % asyncHttpClientVersion % "test",
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
 ).dependsOn(nettyServer, specs2 % "test")
 
 lazy val nettyUploads = module("netty-uploads")().settings(
   description := "Uploads plan support using Netty",
   libraryDependencies ++= integrationTestDeps.value,
+  libraryDependencies := libraryDependencies.value.map(_.withDottyCompat(scalaVersion.value)),
   parallelExecution in Test := false
 ).dependsOn(nettyServer, uploads, specs2 % "test")

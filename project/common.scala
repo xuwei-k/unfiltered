@@ -22,10 +22,10 @@ object Common {
 
     crossScalaVersions := Seq("2.13.1", Scala212, "2.11.12"),
 
-    scalaVersion := Scala212,
+    scalaVersion := "0.21.0-RC1",
 
     scalacOptions ++=
-      Seq("-Xcheckinit", "-encoding", "utf8", "-deprecation", "-unchecked", "-feature"),
+      Seq("-Xcheckinit", "-encoding", "utf8", "-deprecation", "-unchecked", "-feature", "-language:Scala2Compat", "-rewrite"),
 
     scalacOptions ++= PartialFunction.condOpt(CrossVersion.partialVersion(scalaVersion.value)){
       case Some((2, v)) if v <= 12 =>
