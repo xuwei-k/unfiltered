@@ -47,7 +47,7 @@ class SslServerSpec
 
   // generated keystore for localhost
   // keytool -keystore keystore -alias unfiltered -genkey -keyalg RSA
-  val keyStorePath = getClass.getResource("/keystore").getPath
+  val keyStorePath = getClass.getResource("/keystore").getFile
   val keyStorePasswd = "unfiltered"
   val securePort = port
 
