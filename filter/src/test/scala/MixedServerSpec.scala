@@ -12,7 +12,14 @@ class MixedServerSpec extends Specification with unfiltered.specs2.jetty.Served 
 
   // generated keystore for localhost
   // keytool -keystore keystore -alias unfiltered -genkey -keyalg RSA
-  val keyStorePath = getClass.getResource("/keystore").getPath
+  val keyStorePath = {
+    val f = getClass.getResource("/keystore").toURI
+    if (f.isAbsolute()) {
+      java.nio.file.Paths.get(f).toAbsolutePath().toString
+    } else {
+      f.getPath();
+    }
+  }
   val keyStorePasswd = "unfiltered"
   val securePort = Port.any
 
