@@ -22,7 +22,7 @@ object Common {
 
     crossScalaVersions := Seq("2.13.3", Scala212, "2.11.12"),
 
-    scalaVersion := Scala212,
+    scalaVersion := "3.0.0-M1",
 
     scalacOptions ++=
       Seq("-Xcheckinit", "-encoding", "utf8", "-deprecation", "-unchecked", "-feature"),

@@ -8,9 +8,9 @@ import java.util.zip.{GZIPOutputStream => GZOS}
  * typically a subclass of java.io.FilterOutputStream */
 object ResponseFilter {
   trait Filtering[S <: OutputStream] extends ResponseFunction[Any] {
-    def apply[T](delegate: HttpResponse[T]) = {
-      new DelegatingResponse(delegate) {
-        override val outputStream = filter(delegate.outputStream)
+    def apply[T](d: HttpResponse[T]) = {
+      new DelegatingResponse(d) {
+        override val outputStream = filter(d.outputStream)
       }
     }
     def filter(os: OutputStream): S
