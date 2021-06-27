@@ -5,17 +5,18 @@ import java.util.concurrent.{Executors, ThreadFactory}
 
 import okhttp3._
 import okio.ByteString
-import org.specs2.specification.BeforeAfterAll
+import org.specs2.specification.BeforeAfterEach
+import org.specs2.specification.core.Fragments
 import unfiltered.request.Method
 
 import scala.language.implicitConversions
 
-trait Hosted extends BeforeAfterAll {
+trait Hosted extends BeforeAfterEach {
   val port = unfiltered.util.Port.any
   val host = HttpUrl.parse(s"http://localhost:$port")
   private var dispatcher: Dispatcher = _
 
-  override def beforeAll(): Unit = {
+  override def before: Fragments = {
     dispatcher = new Dispatcher(Executors.newFixedThreadPool(10, new ThreadFactory {
       val counter = new java.util.concurrent.atomic.AtomicInteger()
       val defaultThreadFactory = Executors.defaultThreadFactory()
@@ -26,13 +27,15 @@ trait Hosted extends BeforeAfterAll {
         thread
       }
     }))
+    Fragments.empty
   }
 
-  override def afterAll(): Unit = {
+  override def after: Fragments = {
     if (dispatcher != null) {
       dispatcher.executorService().shutdown()
     }
     dispatcher = null
+    Fragments.empty
   }
 
   def http(req: Request): Response = {

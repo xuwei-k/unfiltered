@@ -3,6 +3,7 @@ package unfiltered.specs2.netty
 import unfiltered.netty.{Server, ServerErrorResponse}
 import unfiltered.netty.cycle.{DeferralExecutor, DeferredIntent, Plan}
 import org.specs2.mutable._
+import org.specs2.specification.core.Fragments
 import io.netty.channel.ChannelHandler.Sharable
 import io.netty.util.ResourceLeakDetector
 
@@ -24,16 +25,16 @@ trait Started extends unfiltered.specs2.Hosted with SpecificationLike {
 
   def server: Server
 
-  override def afterAll(): Unit = {
+  override def after: Fragments = {
     server.stop()
     server.destroy()
     executor.shutdown()
-    super.afterAll()
+    super.after
   }
 
-  override def beforeAll(): Unit = {
+  override def before: Fragments = {
     server.start()
-    super.beforeAll()
+    super.before
   }
 
  // override def map(fs: =>Fragments) = Step(before) ^ fs ^ Step(after)

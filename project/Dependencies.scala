@@ -4,7 +4,11 @@ object Dependencies {
   val servletApiDep = "jakarta.servlet" % "jakarta.servlet-api" % "5.0.0"
 
   val specs2Dep = Def.setting {
-    "org.specs2" %% "specs2-core" % "4.12.2" cross CrossVersion.for3Use2_13
+    if (scalaBinaryVersion.value == "3") {
+      "org.specs2" %% "specs2-core" % "5.0.0-ALPHA-03"
+    } else {
+      "org.specs2" %% "specs2-core" % "4.12.2"
+    }
   }
 
   def okHttp = "com.squareup.okhttp3" % "okhttp" % "4.9.1" :: Nil

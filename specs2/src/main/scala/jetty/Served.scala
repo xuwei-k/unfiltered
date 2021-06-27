@@ -2,7 +2,7 @@ package unfiltered.specs2
 package jetty
 
 import org.specs2.mutable._
-
+import org.specs2.specification.core.Fragments
 
 trait Planned extends Served {
 
@@ -19,14 +19,14 @@ trait Served extends Hosted with SpecificationLike {
 
   lazy val server = setup(Server.http(port))
 
-  override def afterAll(): Unit = {
+  override def after: Fragments = {
     server.stop()
     server.destroy()
-    super.afterAll()
+    super.after
   }
 
-  override def beforeAll(): Unit = {
+  override def before: Fragments = {
     server.start()
-    super.beforeAll()
+    super.before
   }
 }
